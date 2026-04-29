@@ -1,0 +1,124 @@
+# Student Performance Analysis System
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# -------------------------------
+# 1. Generate Data
+# -------------------------------
+np.random.seed(42)
+
+students = ['Student_' + str(i) for i in range(1, 21)]
+
+data = {
+    'Name': students,
+    'Math': np.random.randint(40, 100, 20),
+    'Science': np.random.randint(40, 100, 20),
+    'English': np.random.randint(40, 100, 20),
+    'Computer': np.random.randint(40, 100, 20)
+}
+
+df = pd.DataFrame(data)
+
+print("\n===== STUDENT MARKS DATA =====")
+print(df)
+
+
+# -------------------------------
+# 2. Statistical Analysis
+# -------------------------------
+df['Total'] = df[['Math', 'Science', 'English', 'Computer']].sum(axis=1)
+df['Average'] = df['Total'] / 4
+
+print("\n===== STATISTICAL ANALYSIS =====")
+print("\nMean:\n", df.mean(numeric_only=True))
+print("\nMedian:\n", df.median(numeric_only=True))
+print("\nStandard Deviation:\n", df.std(numeric_only=True))
+
+
+# -------------------------------
+# 3. Performance Classification
+# -------------------------------
+high_performers = df[df['Average'] >= 75]
+low_performers = df[df['Average'] < 50]
+
+print("\n===== HIGH PERFORMERS (>=75) =====")
+print(high_performers[['Name', 'Average']])
+
+print("\n===== LOW PERFORMERS (<50) =====")
+print(low_performers[['Name', 'Average']])
+
+
+# -------------------------------
+# 4. Subject-wise Comparison
+# -------------------------------
+subject_avg = df[['Math', 'Science', 'English', 'Computer']].mean()
+
+print("\n===== SUBJECT-WISE AVERAGE =====")
+print(subject_avg)
+
+
+# -------------------------------
+# 5. Visualization
+# -------------------------------
+
+# (a) Bar Graph
+plt.figure()
+subject_avg.plot(kind='bar')
+plt.title('Average Marks per Subject')
+plt.xlabel('Subjects')
+plt.ylabel('Marks')
+plt.tight_layout()
+plt.show()
+
+# (b) Line Plot
+plt.figure()
+plt.plot(df['Name'], df['Average'], marker='o')
+plt.xticks(rotation=45)
+plt.title('Student Average Scores')
+plt.xlabel('Students')
+plt.ylabel('Average Marks')
+plt.tight_layout()
+plt.show()
+
+# (c) Histogram
+plt.figure()
+plt.hist(df['Total'], bins=10)
+plt.title('Distribution of Total Scores')
+plt.xlabel('Total Marks')
+plt.ylabel('Frequency')
+plt.tight_layout()
+plt.show()
+
+# (d) Pie Chart
+plt.figure()
+subject_avg.plot(kind='pie', autopct='%1.1f%%')
+plt.title('Subject Contribution to Overall Performance')
+plt.ylabel('')
+plt.tight_layout()
+plt.show()
+
+
+# -------------------------------
+# 6. Insights (Printed Output)
+# -------------------------------
+print("\n===== INSIGHTS =====")
+
+top_student = df.loc[df['Average'].idxmax()]
+weak_student = df.loc[df['Average'].idxmin()]
+
+print(f"Top Performer: {top_student['Name']} with average {top_student['Average']:.2f}")
+print(f"Lowest Performer: {weak_student['Name']} with average {weak_student['Average']:.2f}")
+
+best_subject = subject_avg.idxmax()
+weak_subject = subject_avg.idxmin()
+
+print(f"Best Performing Subject: {best_subject}")
+print(f"Weakest Subject: {weak_subject}")
+
+print("\nGeneral Observations:")
+print("- Students above 75 average are performing well.")
+print("- Students below 50 need improvement.")
+print("- Subject averages help identify strong and weak academic areas.")
+print("- Graphs provide clear visualization of performance trends.")
